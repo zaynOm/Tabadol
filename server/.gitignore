@@ -1,2 +1,8 @@
-/node_modules
-
+node_modules
+dist
+.env
+final_data.csv
+data_ar.json
+data_fr.json
+data_formater.py
+test.json
