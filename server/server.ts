@@ -1,9 +1,11 @@
-import dotenv from "dotenv";
+import "dotenv/config";
 import express from "express";
 import session from "express-session";
+import connectDB from "./config/db";
 import authRoutes from "./routes/auth";
+import geoRouter from "./routes/geo";
 
-dotenv.config();
+connectDB();
 
 const app = express();
 
@@ -17,6 +19,7 @@ app.use(
 );
 
 app.use(authRoutes);
+app.use(geoRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello word!!!!!");
