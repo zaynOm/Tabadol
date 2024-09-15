@@ -1,22 +1,25 @@
-import "dotenv/config";
+import dotenv from "dotenv";
 import express from "express";
-import session from "express-session";
 import connectDB from "./config/db";
-import authRoutes from "./routes/auth";
-import geoRouter from "./routes/geo";
+import authRoutes from "./routes/authRoutes";
+import geoRouter from "./routes/geoRoutes";
+
+dotenv.config({
+  path: process.env.NODE_ENV === "prod" ? ".env.prod" : ".env",
+});
 
 connectDB();
 
 const app = express();
 
 app.use(express.json());
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "SESSION_SECRET",
-    resave: false,
-    saveUninitialized: true,
-  })
-);
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET || "SESSION_SECRET",
+//     resave: false,
+//     saveUninitialized: true,
+//   })
+// );
 
 app.use(authRoutes);
 app.use(geoRouter);
