@@ -3,6 +3,7 @@ import express from "express";
 import connectDB from "./config/db";
 import authRoutes from "./routes/authRoutes";
 import geoRouter from "./routes/geoRoutes";
+import demandRouter from "./routes/demandRoutes";
 
 dotenv.config({
   path: process.env.NODE_ENV === "prod" ? ".env.prod" : ".env",
@@ -21,8 +22,9 @@ app.use(express.json());
 //   })
 // );
 
-app.use(authRoutes);
-app.use(geoRouter);
+app.use("/api", authRoutes);
+app.use("/api", geoRouter);
+app.use("/api", demandRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello word!!!!!");
