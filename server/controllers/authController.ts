@@ -3,19 +3,6 @@ import jwt from "jsonwebtoken";
 import { oauth2Client } from "../config/auth";
 import User, { TUser } from "../models/user";
 
-// export const googleLogin = async (req: Request, res: Response) => {
-//   try {
-//     const url = oauth2Client.generateAuthUrl({
-//       access_type: "offline",
-//       scope: ["profile", "email"],
-//     });
-//     return res.json({ url });
-//   } catch (error) {
-//     return res
-//       .status(500)
-//       .json({ message: "Login failed", error: (error as Error).message });
-//   }
-// };
 
 export const googleAuth = async (req: Request, res: Response) => {
   const { idToken } = req.body;
