@@ -1,16 +1,9 @@
-interface ICustomError {
-  status: string;
-  statusCode: number;
-}
+class CustomError extends Error {
+  status: number;
 
-class CustomError extends Error implements ICustomError {
-  statusCode: number;
-  status: string;
-
-  constructor(message: string, statusCode: number) {
+  constructor(message: string, status: number) {
     super(message);
-    this.statusCode = statusCode;
-    this.status = 400 <= statusCode && statusCode < 500 ? "fail" : "error";
+    this.status = status;
 
     Object.setPrototypeOf(this, CustomError.prototype);
   }
