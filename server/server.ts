@@ -1,9 +1,10 @@
 import dotenv from "dotenv";
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import connectDB from "./config/db";
 import authRoutes from "./routes/authRoutes";
 import geoRouter from "./routes/geoRoutes";
 import demandRouter from "./routes/demandRoutes";
+import CustomError from "./utils/customError";
 
 dotenv.config({
   path: process.env.NODE_ENV === "prod" ? ".env.prod" : ".env",
@@ -19,8 +20,9 @@ app.use("/api/v1", authRoutes);
 app.use("/api/v1", geoRouter);
 app.use("/api/v1", demandRouter);
 
-app.get("/", (req, res) => {
-  res.send("Hello word!!!!!");
+app.all("*", (req, _res, next) => {
+  const err = new CustomError(`${req.originalUrl} route not found`, 404);
+  next(err);
 });
 
 const PORT = process.env.PORT || 5000;
