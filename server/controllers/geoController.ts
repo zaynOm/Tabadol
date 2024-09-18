@@ -9,7 +9,7 @@ import "../models/commune";
 
 export const getAcademies = asyncErrorHandler(async (req: Request, res: Response) => {
   const academies = await Academy.find({}, "_id name");
-  return res.json({ success: true, academies });
+  return res.json({ success: true, data: academies });
 });
 
 export const getAcademy = asyncErrorHandler(
@@ -21,7 +21,7 @@ export const getAcademy = asyncErrorHandler(
       const error = new CustomError("Academy not found!", 404);
       return next(error);
     }
-    res.json({ success: true, academy });
+    res.json({ success: true, data: academy });
   },
 );
 
@@ -38,6 +38,6 @@ export const getProvincesAndCommunesByAcademyId = asyncErrorHandler(
       return next(error);
     }
 
-    return res.json({ success: true, provincesAndCommunes });
+    return res.json({ success: true, data: provincesAndCommunes });
   },
 );
