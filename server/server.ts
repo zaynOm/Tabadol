@@ -15,9 +15,9 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/api", authRoutes);
-app.use("/api", geoRouter);
-app.use("/api", demandRouter);
+app.use("/api/v1", authRoutes);
+app.use("/api/v1", geoRouter);
+app.use("/api/v1", demandRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello word!!!!!");
