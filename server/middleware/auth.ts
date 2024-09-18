@@ -13,7 +13,6 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
     if (err) {
       return res.status(401).json({ message: "unauthorized" });
     }
-    console.log(decoded);
     req.user = decoded;
     next();
   });
