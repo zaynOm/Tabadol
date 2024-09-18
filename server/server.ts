@@ -14,13 +14,6 @@ connectDB();
 const app = express();
 
 app.use(express.json());
-// app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET || "SESSION_SECRET",
-//     resave: false,
-//     saveUninitialized: true,
-//   })
-// );
 
 app.use("/api", authRoutes);
 app.use("/api", geoRouter);
