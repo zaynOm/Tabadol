@@ -1,56 +1,43 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import Academy from "../models/academy";
+import asyncErrorHandler from "../utils/asyncErrorHandler";
+import CustomError from "../utils/customError";
+import Province from "../models/province";
 
 // this is important to use mongoose populate
-import Province from "../models/province";
 import "../models/commune";
 
-export const getAcademies = async (req: Request, res: Response) => {
-  try {
-    const academies = await Academy.find({}, "_id name");
-    return res.json(academies);
-  } catch (error) {
-    return res.status(500).json({
-      message: "Error retrieving academies",
-      error: (error as Error).message,
-    });
-  }
-};
+export const getAcademies = asyncErrorHandler(async (req: Request, res: Response) => {
+  const academies = await Academy.find({}, "_id name");
+  return res.json({ success: true, academies });
+});
 
-export const getAcademy = async (req: Request, res: Response) => {
-  const academyId = req.params.academyId;
-  try {
+export const getAcademy = asyncErrorHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const academyId = req.params.academyId;
+
     const academy = await Academy.findById(academyId).populate("provinces");
     if (!academy) {
-      return res.status(404).json({ message: "Academy not found" });
+      const error = new CustomError("Academy not found!", 404);
+      return next(error);
     }
-    return res.json(academy);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Error retrieving the academy",
-      error: (error as Error).message,
-    });
-  }
-};
+    res.json({ success: true, academy });
+  },
+);
 
-export const getProvincesAndCommunesByAcademyId = async (req: Request, res: Response) => {
-  const academyId = req.params.academyId;
-  try {
+export const getProvincesAndCommunesByAcademyId = asyncErrorHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const academyId = req.params.academyId;
+
     const provincesAndCommunes = await Province.find({ academyId }, "_id name").populate(
       "communes",
       "_id name",
     );
     if (!provincesAndCommunes) {
-      return res.status(404).json({ message: "No Provinces where found for the given academyId" });
+      const error = new CustomError("No Provinces where found for the given academyId!", 404);
+      return next(error);
     }
 
-    return res.json(provincesAndCommunes);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Error retrieving the provinces",
-      error: (error as Error).message,
-    });
-  }
-};
+    return res.json({ success: true, provincesAndCommunes });
+  },
+);
