@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import CustomError from "../utils/customError";
 
 export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
@@ -10,10 +11,10 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
   }
 
   jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: "unauthorized" });
+    if (err || !decoded) {
+      next(new CustomError("unauthorized", 401));
     }
-    req.user = decoded;
+    // req.user = decoded;
     next();
   });
 };
