@@ -43,3 +43,24 @@ export const googleAuth = asyncErrorHandler(async (req: Request, res: Response) 
   });
 });
 
+export const signUp = asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { name, email, password } = req.body;
+
+  let user = await User.findOne({ email });
+  if (user) {
+    return next(new CustomError("Email already exists", 409));
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  user = await User.create({ name, email, password: hashedPassword });
+
+  res.json({
+    success: true,
+    data: {
+      user: { id: user._id, name: user.name, email: user.email },
+    },
+  });
+});
+  res.json({
+    success: true,
+});
