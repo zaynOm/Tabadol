@@ -2,8 +2,8 @@ import dotenv from "dotenv";
 import express, { NextFunction, Request, Response } from "express";
 import connectDB from "./config/db";
 import authRoutes from "./routes/authRoutes";
-import geoRouter from "./routes/geoRoutes";
 import demandRouter from "./routes/demandRoutes";
+import geoRouter from "./routes/geoRoutes";
 import CustomError from "./utils/customError";
 
 dotenv.config({
@@ -27,6 +27,9 @@ app.all("*", (req, _res, next) => {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: CustomError, _req: Request, res: Response, _next: NextFunction) => {
+  if (process.env.NODE_ENV === "dev") {
+    console.log(err);
+  }
   err.status = err.status || 500;
   res.status(err.status).json({
     success: false,
