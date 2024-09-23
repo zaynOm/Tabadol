@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { NextFunction, Request, Response } from "express";
 import { oauth2Client } from "../config/auth";
 import User, { TUser } from "../models/user";
@@ -54,9 +55,13 @@ export const signUp = asyncErrorHandler(async (req: Request, res: Response, next
   const hashedPassword = await bcrypt.hash(password, 10);
   user = await User.create({ name, email, password: hashedPassword });
 
+  const access_token = generateAccessToken(user._id);
+  const refresh_token = generateRefreshToken(user._id);
   res.json({
     success: true,
     data: {
+      access_token,
+      refresh_token,
       user: { id: user._id, name: user.name, email: user.email },
     },
   });
