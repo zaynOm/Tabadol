@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import { NextFunction, Request, Response } from "express";
 import { oauth2Client } from "../config/auth";
 import User, { TUser } from "../models/user";
 import asyncErrorHandler from "../utils/asyncErrorHandler";
+import CustomError from "../utils/customError";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwtTokens";
 
 export const googleAuth = asyncErrorHandler(async (req: Request, res: Response) => {
   const { idToken } = req.body;
@@ -25,7 +26,20 @@ export const googleAuth = asyncErrorHandler(async (req: Request, res: Response) 
     user = await User.create(userData);
   }
 
-  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!);
+  const access_token = generateAccessToken(user._id);
+  const refresh_token = generateRefreshToken(user._id);
 
-  res.json({ success: true, data: { token, user } });
+  res.json({
+    success: true,
+    data: {
+      access_token,
+      refresh_token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    },
+  });
 });
+
