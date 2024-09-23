@@ -66,6 +66,28 @@ export const signUp = asyncErrorHandler(async (req: Request, res: Response, next
     },
   });
 });
+
+export const signIn = asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return next(new CustomError("User not found", 404));
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password!);
+  if (!isMatch) {
+    return next(new CustomError("Wrong password", 400));
+  }
+
+  const access_token = generateAccessToken(user._id);
+  const refresh_token = generateRefreshToken(user._id);
   res.json({
     success: true,
+    data: {
+      access_token,
+      refresh_token,
+      user: { id: user._id, name: user.name, email: user.email },
+    },
+  });
 });
