@@ -24,12 +24,28 @@ type AuthProps = {
 };
 
 const AuthContext = createContext<AuthProps>({});
+
 export const AuthProvider = ({ children }: any) => {
   const [authState, setAuthState] = useState<AuthProps["authState"]>({
     token: null,
     authenticated: null,
   });
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadToken = async () => {
+      const token = await SecureStore.getItemAsync("accessToken");
+      if (token) {
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        setAuthState({
+          token,
+          authenticated: !!token,
+        });
+      }
+      setLoading(false);
+    };
+    loadToken();
+  }, []);
 
   const googleLogin = async () => {
     try {
