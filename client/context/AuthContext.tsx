@@ -1,5 +1,6 @@
 import {
   GoogleSignin,
+  isCancelledResponse,
 } from "@react-native-google-signin/google-signin";
 import axios from "axios";
 import { router } from "expo-router";
@@ -17,6 +18,7 @@ type AuthProps = {
   authState?: { token: string | null; authenticated: boolean | null };
   loading?: boolean;
   onGoogleLogin?: () => Promise<any>;
+  onLogout?: () => Promise<any>;
 };
 
 const AuthContext = createContext<AuthProps>({});
@@ -50,9 +52,25 @@ export const AuthProvider = ({ children }: any) => {
       throw new Error((error as any).response.data.message);
     }
   };
+  const logout = async () => {
+    await SecureStore.deleteItemAsync("accessToken");
+    axios.defaults.headers.common["Authorization"] = null;
+    setAuthState({
+      token: null,
+      authenticated: false,
+    });
+    // this is necessary for google signout so the user get to choose the google account
+    if (GoogleSignin.getCurrentUser()) {
+      // await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+    }
+    router.navigate("/(auth)/sign-in");
+  };
+
   const value: AuthProps = {
     authState,
     onGoogleLogin: googleLogin,
+    onLogout: logout,
     loading,
   };
 
