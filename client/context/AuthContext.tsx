@@ -19,6 +19,7 @@ type AuthProps = {
   loading?: boolean;
   onGoogleLogin?: () => Promise<any>;
   onRegister?: (name: string, email: string, password: string) => Promise<any>;
+  onLogin?: (email: string, password: string) => Promise<any>;
   onLogout?: () => Promise<any>;
 };
 
@@ -63,6 +64,23 @@ export const AuthProvider = ({ children }: any) => {
     }
   };
 
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await axios.post("/auth/login", { email, password });
+      const token = response.data.data.access_token;
+      setAuthState({
+        token,
+        authenticated: true,
+      });
+
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      await SecureStore.setItemAsync("accessToken", token);
+    } catch (error) {
+      throw new Error((error as any).response.data.message);
+    }
+  };
+
   const logout = async () => {
     await SecureStore.deleteItemAsync("accessToken");
     axios.defaults.headers.common["Authorization"] = null;
@@ -82,6 +100,7 @@ export const AuthProvider = ({ children }: any) => {
     authState,
     onGoogleLogin: googleLogin,
     onRegister: register,
+    onLogin: login,
     onLogout: logout,
     loading,
   };
