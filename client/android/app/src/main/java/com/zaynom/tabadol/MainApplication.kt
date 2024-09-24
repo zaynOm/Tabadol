@@ -1,4 +1,4 @@
-package com.client
+package com.zaynom.tabadol
 
 import android.app.Application
 import android.content.res.Configuration

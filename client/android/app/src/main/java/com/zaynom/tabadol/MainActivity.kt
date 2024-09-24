@@ -1,4 +1,4 @@
-package com.client
+package com.zaynom.tabadol
 
 import android.os.Build
 import android.os.Bundle
