@@ -18,6 +18,7 @@ type AuthProps = {
   authState?: { token: string | null; authenticated: boolean | null };
   loading?: boolean;
   onGoogleLogin?: () => Promise<any>;
+  onRegister?: (name: string, email: string, password: string) => Promise<any>;
   onLogout?: () => Promise<any>;
 };
 
@@ -52,6 +53,16 @@ export const AuthProvider = ({ children }: any) => {
       throw new Error((error as any).response.data.message);
     }
   };
+
+  // Add email verification
+  const register = async (name: string, email: string, password: string) => {
+    try {
+      return await axios.post("/auth/signup", { name, email, password });
+    } catch (error) {
+      throw new Error((error as any).response.data.message);
+    }
+  };
+
   const logout = async () => {
     await SecureStore.deleteItemAsync("accessToken");
     axios.defaults.headers.common["Authorization"] = null;
@@ -70,6 +81,7 @@ export const AuthProvider = ({ children }: any) => {
   const value: AuthProps = {
     authState,
     onGoogleLogin: googleLogin,
+    onRegister: register,
     onLogout: logout,
     loading,
   };
