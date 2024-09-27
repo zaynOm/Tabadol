@@ -11,7 +11,7 @@ const Settings = () => {
       <View className="flex-1 items-center">
         <Image
           className="w-28 h-28 rounded-full"
-          source={user?.picture ? { uri: user?.picture } : images.profile}
+          source={user?.picture ? { uri: user?.picture } : images.user}
         />
         <Text className="text-2xl font-medium">{user?.name}</Text>
         <Text>{user?.email}</Text>
