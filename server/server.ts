@@ -4,6 +4,7 @@ import connectDB from "./config/db";
 import authRoutes from "./routes/authRoutes";
 import demandRouter from "./routes/demandRoutes";
 import geoRouter from "./routes/geoRoutes";
+import userRouter from "./routes/userRoutes";
 import CustomError from "./utils/customError";
 
 dotenv.config({
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use("/api/v1", authRoutes);
 app.use("/api/v1", geoRouter);
 app.use("/api/v1", demandRouter);
+app.use("/api/v1", userRouter);
 
 app.all("*", (req, _res, next) => {
   const err = new CustomError(`${req.originalUrl} route not found`, 404);
