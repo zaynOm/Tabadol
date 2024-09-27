@@ -2,6 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "dev": "NODE_ENV=dev tsnd --respawn --watch ./ server.ts",
@@ -14,7 +15,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "shared": "workspace:*",
     "bcrypt": "^5.1.1",
     "csv-parser": "^3.0.0",
     "express": "^4.19.2",
