@@ -2,6 +2,26 @@
 
 Tabadol is a mobile app that enables educational personnel to share their demands to exchange post with others.
 
+## Teck stack
+
+- ### Frontend
+
+  - Typescript
+  - React Native
+  - Expo
+  - Zustan
+  - Axios
+  - NativeWind
+
+- ### Backend
+
+  - Typescript
+  - Node.js
+  - Express
+  - Mongoose
+  - Bcrypt
+  - JsonWebToken
+
 ## Getting started
 
 ### Pre-requisites
