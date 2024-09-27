@@ -7,8 +7,9 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
+      "image": "./assets/images/logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ff0000"
     },
     "ios": {
       "supportsTablet": true,
