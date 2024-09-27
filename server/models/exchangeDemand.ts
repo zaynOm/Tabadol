@@ -1,11 +1,11 @@
 import { Demand, Location } from "@/types/demand";
 import { model, Schema } from "mongoose";
 
-const locationSchema = new Schema<Location>(
+export const locationSchema = new Schema<Location>(
   {
-    academy: { type: Schema.Types.ObjectId, ref: "Academy", required: true },
-    province: { type: Schema.Types.ObjectId, ref: "Province", required: true },
-    commune: { type: Schema.Types.ObjectId, ref: "Commune", required: true },
+    academy: { type: Schema.Types.ObjectId, ref: "Academy", required: true, default: null },
+    province: { type: Schema.Types.ObjectId, ref: "Province", required: true, default: null },
+    commune: { type: Schema.Types.ObjectId, ref: "Commune", required: true, default: null },
     school: { type: String, required: true },
   },
   { _id: false }
@@ -14,9 +14,6 @@ const locationSchema = new Schema<Location>(
 const exchangeDemandSchema = new Schema<Demand>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    post: { type: String, required: true },
-    speciality: { type: String, required: true, default: "sans" },
-    currentLocation: { type: locationSchema, required: true },
     desiredLocation: {
       type: new Schema<Location>(
         {
