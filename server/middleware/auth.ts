@@ -10,8 +10,9 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
     return res.sendStatus(401);
   }
 
-  jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err, decoded) => {
     if (err || !decoded) {
+      console.log(err);
       next(new CustomError("unauthorized", 401));
     }
     // req.user = decoded;
