@@ -1,10 +1,9 @@
 import CustomButton from "@/components/CustomButton";
+import CustomInput from "@/components/CustomInput";
 import Divider from "@/components/Divider";
-import FormField from "@/components/FormField";
 import { useAuth } from "@/context/AuthContext";
 import { FontAwesome } from "@expo/vector-icons";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -27,23 +26,13 @@ const SignIn = () => {
     try {
       await onGoogleLogin!();
     } catch (error) {
-      console.log("Google auth error", error);
-    }
-  };
-
-  const googleLogout = async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-    } catch (error) {
-      console.log(error);
+      console.log("🚀 ~ file: sign-in.tsx:29 ~ error:", error);
     }
   };
 
   const login = async () => {
     try {
       await onLogin!(form.email, form.password);
-      router.replace("/(tabs)");
     } catch (error: any) {
       ToastAndroid.show(error.message, ToastAndroid.SHORT);
     }
@@ -51,42 +40,38 @@ const SignIn = () => {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1"
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      {/* Tabadol logo */}
-      <SafeAreaView
-        className="flex-1 w-full justify-center items-center h-full "
-        // style={{ minHeight: Dimensions.get("window").height - 100 }}
-      >
+      <SafeAreaView className="flex w-full justify-center items-center h-full">
+        {/* Tabadol logo */}
         <ScrollView
           keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}
-          className="flex-1"
           contentContainerStyle={{
             flexGrow: 1,
             alignItems: "center",
             justifyContent: "center",
           }}
+          className="w-full px-8"
         >
           <Text className="text-2xl font-bold mb-10">Login to Tabadol</Text>
 
           <CustomButton
             text="Continue with Google"
-            Icon={() => <FontAwesome name="google" size={28} />}
+            IconLeft={() => <FontAwesome name="google" size={28} />}
             bStyle=""
             handlePress={handleGoogleLogin}
           />
 
           <Divider />
 
-          <FormField
+          <CustomInput
             placeholder="Email"
             value={form.email}
             onChangeText={(value) => setForm({ ...form, email: value })}
-            otherSyles="mt-7"
+            containerStyles="mt-7"
           />
-          <FormField
+          <CustomInput
             placeholder="Password"
             value={form.password}
             onChangeText={(value) => setForm({ ...form, password: value })}
