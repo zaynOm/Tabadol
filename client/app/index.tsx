@@ -4,17 +4,22 @@ import { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 
 const Index = () => {
-  const { authState, loading } = useAuth();
+  const { user, authState, loading } = useAuth();
 
   useEffect(() => {
     if (!loading) {
       if (authState?.authenticated) {
-        router.replace("/(tabs)");
+        if (!user.location) {
+          console.log("index inside location check");
+          router.replace("/(auth)/setup-completion");
+        } else {
+          router.replace("/(tabs)");
+        }
       } else {
         router.replace("/(auth)/sign-in");
       }
     }
-  }, [authState, loading, router]);
+  }, [user, authState, loading, router]);
 
   if (loading) {
     return (
