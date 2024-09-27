@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 
 export const generateAccessToken = (userId: Types.ObjectId) =>
   jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET!, {
-    expiresIn: "30m",
+    expiresIn: "30d",
   });
 
 export const generateRefreshToken = (userId: Types.ObjectId) =>
