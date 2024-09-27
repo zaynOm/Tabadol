@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { NextFunction, Request, Response } from "express";
 import { oauth2Client } from "../config/auth";
-import User, { TUser } from "../models/user";
+import User from "../models/user";
 import asyncErrorHandler from "../utils/asyncErrorHandler";
 import CustomError from "../utils/customError";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwtTokens";
@@ -15,7 +15,7 @@ export const googleAuth = asyncErrorHandler(async (req: Request, res: Response) 
   });
   const payload = ticket.getPayload();
 
-  const userData: TUser = {
+  const userData = {
     googleId: payload?.sub as string,
     email: payload?.email as string,
     name: payload?.name as string,
@@ -39,6 +39,8 @@ export const googleAuth = asyncErrorHandler(async (req: Request, res: Response) 
         id: user._id,
         name: user.name,
         email: user.email,
+        picture: user.picture,
+        location: user.location,
       },
     },
   });
@@ -55,14 +57,23 @@ export const signUp = asyncErrorHandler(async (req: Request, res: Response, next
   const hashedPassword = await bcrypt.hash(password, 10);
   user = await User.create({ name, email, password: hashedPassword });
 
+  console.log(user);
+
   const access_token = generateAccessToken(user._id);
   const refresh_token = generateRefreshToken(user._id);
+
   res.json({
     success: true,
     data: {
       access_token,
       refresh_token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        location: user.location,
+      },
     },
   });
 });
@@ -82,12 +93,19 @@ export const signIn = asyncErrorHandler(async (req: Request, res: Response, next
 
   const access_token = generateAccessToken(user._id);
   const refresh_token = generateRefreshToken(user._id);
+
   res.json({
     success: true,
     data: {
       access_token,
       refresh_token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        location: user.location,
+      },
     },
   });
 });
