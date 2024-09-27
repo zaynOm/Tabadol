@@ -1,8 +1,10 @@
-import React from "react";
+import { useAuth } from "@/context/AuthContext";
+import { Octicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { FontAwesome } from "@expo/vector-icons";
+import React from "react";
 
 const TabLayout = () => {
+  const { onLogout } = useAuth();
   return (
     <Tabs>
       <Tabs.Screen
@@ -10,8 +12,9 @@ const TabLayout = () => {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
+            <Octicons size={28} name="home" color={color} />
           ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -19,9 +22,20 @@ const TabLayout = () => {
         options={{
           title: "Settings",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="cog" color={color} />
+            <Octicons size={28} name="person" color={color} />
           ),
+          headerRightContainerStyle: {
+            paddingEnd: 20,
+          },
+          headerRight: () => (
+            <Octicons name="sign-out" size={28} onPress={onLogout} />
+          ),
+          headerShadowVisible: false,
         }}
+      />
+      <Tabs.Screen
+        name="new-demand"
+        options={{ href: null, title: "New Demand" }}
       />
     </Tabs>
   );
