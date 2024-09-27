@@ -7,6 +7,12 @@ export type Location = {
   school: string;
 };
 
+export type Demand = {
+  userId: Types.ObjectId;
+  desiredLocation: Location;
+  status: "open" | "closed" | "matched";
+};
+
 export type LocationPopulated = {
   academy: { id: Types.ObjectId; name: string };
   province: { id: Types.ObjectId; name: string };
@@ -14,19 +20,18 @@ export type LocationPopulated = {
   school: { id: Types.ObjectId; name: string };
 };
 
-export type Demand = {
-  userId: Types.ObjectId;
-  post: string;
-  speciality: string;
-  currentLocation: Location;
-  desiredLocation: Location;
-  status: "open" | "closed" | "matched";
-};
-
 export type DemandPopulated = Omit<
   Demand,
-  "currentLocation" | "desiredLocation"
+  "userId" | "currentLocation" | "desiredLocation"
 > & {
+  userId: {
+    id: Types.ObjectId;
+    name: string;
+    post: string;
+    speciality: string;
+    location: LocationPopulated;
+  };
   currentLocation: LocationPopulated;
   desiredLocation: LocationPopulated;
+  createdAt: string;
 };
