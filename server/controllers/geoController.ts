@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import Academy from "../models/academy";
+import Province from "../models/province";
 import asyncErrorHandler from "../utils/asyncErrorHandler";
 import CustomError from "../utils/customError";
-import Province from "../models/province";
 
 // this is important to use mongoose populate
 import "../models/commune";
@@ -12,7 +12,7 @@ export const getAcademies = asyncErrorHandler(async (req: Request, res: Response
   return res.json({ success: true, data: academies });
 });
 
-export const getAcademy = asyncErrorHandler(
+export const getAcademyWithProvinces = asyncErrorHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const academyId = req.params.academyId;
 
@@ -22,7 +22,7 @@ export const getAcademy = asyncErrorHandler(
       return next(error);
     }
     res.json({ success: true, data: academy });
-  },
+  }
 );
 
 export const getProvincesAndCommunesByAcademyId = asyncErrorHandler(
@@ -31,7 +31,7 @@ export const getProvincesAndCommunesByAcademyId = asyncErrorHandler(
 
     const provincesAndCommunes = await Province.find({ academyId }, "_id name").populate(
       "communes",
-      "_id name",
+      "_id name"
     );
     if (!provincesAndCommunes) {
       const error = new CustomError("No Provinces where found for the given academyId!", 404);
@@ -39,5 +39,5 @@ export const getProvincesAndCommunesByAcademyId = asyncErrorHandler(
     }
 
     return res.json({ success: true, data: provincesAndCommunes });
-  },
+  }
 );
